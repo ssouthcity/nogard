@@ -60,14 +60,14 @@ func NewDragonInfoHandler(details DragonDetailser) func(s *discordgo.Session, i 
 		}
 
 		colors := map[nogard.Rarity]int{
-			nogard.Primary:   14408667,
-			nogard.Hybrid:    1686784,
-			nogard.Rare:      36292,
-			nogard.Epic:      6619320,
-			nogard.Gemstone:  14886400,
-			nogard.Galaxy:    3074047,
-			nogard.Mythic:    8847367,
-			nogard.Legendary: 13893755,
+			nogard.Primary:   15663085,
+			nogard.Hybrid:    9043831,
+			nogard.Rare:      39423,
+			nogard.Epic:      9048814,
+			nogard.Gemstone:  16742161,
+			nogard.Galaxy:    122367,
+			nogard.Mythic:    16720827,
+			nogard.Legendary: 15606273,
 		}
 
 		embed := &discordgo.MessageEmbed{
