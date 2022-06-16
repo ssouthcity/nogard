@@ -2,14 +2,6 @@ package nogard
 
 import "time"
 
-type Availability uint8
-
-const (
-	Permanent Availability = iota
-	Available
-	Unavailable
-)
-
 type Dragon struct {
 	Name         string        `json:"name"`
 	Description  string        `json:"description"`
