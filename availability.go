@@ -7,3 +7,5 @@ const (
 	Available
 	Unavailable
 )
+
+//go:generate stringer -type Availability

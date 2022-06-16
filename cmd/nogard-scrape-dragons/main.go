@@ -18,7 +18,7 @@ import (
 )
 
 type DragonStore struct {
-	Dragons []nogard.Dragon
+	Dragons map[string]nogard.Dragon
 	Mutex   sync.RWMutex
 }
 
@@ -161,7 +161,7 @@ func scrapeDragon(pageID int) (d nogard.Dragon) {
 
 func main() {
 	ds := &DragonStore{
-		Dragons: make([]nogard.Dragon, 0),
+		Dragons: make(map[string]nogard.Dragon, 0),
 		Mutex:   sync.RWMutex{},
 	}
 	wg := sync.WaitGroup{}
@@ -208,7 +208,7 @@ func main() {
 
 				defer ds.Mutex.Unlock()
 				ds.Mutex.Lock()
-				ds.Dragons = append(ds.Dragons, d)
+				ds.Dragons[d.Name] = d
 			}(page.PageID)
 		}
 

@@ -1,4 +1,4 @@
-package data
+package local
 
 import (
 	_ "embed"
@@ -31,14 +31,10 @@ func (s *DragonService) SearchDragon(query string) ([]string, error) {
 		}
 	}
 
-	if len(suggestions) > 25 {
-		suggestions = suggestions[:25]
-	}
-
 	return suggestions, nil
 }
 
-func (s *DragonService) DragonInfo(name string) (*nogard.Dragon, error) {
+func (s *DragonService) DragonDetails(name string) (*nogard.Dragon, error) {
 	if dragon, ok := s.dragons[name]; ok {
 		return dragon, nil
 	}

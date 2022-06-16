@@ -13,3 +13,12 @@ type Dragon struct {
 	Latent       []string      `json:"latent"`
 	Breeding     [][]string    `json:"breeding"`
 }
+
+func (d *Dragon) BreedingTime(upgraded bool) time.Duration {
+	modifier := 1.0
+	if upgraded {
+		modifier = 0.8
+	}
+
+	return time.Duration(float64(d.Incubation.Nanoseconds()) * modifier)
+}
