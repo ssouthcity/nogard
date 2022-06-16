@@ -16,3 +16,6 @@
 
 # Environment Configuration
 config.sh
+
+# Kubernetes Secrets
+k8s/secrets.yaml

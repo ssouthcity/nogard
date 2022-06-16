@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nogard-deployment
+  namespace: nogard
+  labels:
+    app: nogard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nogard
+  template:
+    metadata:
+      labels:
+        app: nogard
+    spec:
+      containers:
+      - name: nogard
+        image: ssouthcity/nogard:latest
+        imagePullPolicy: Always
+        env:
+        - name: NOGARD_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: nogard-secrets
+              key: discord_token
