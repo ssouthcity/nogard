@@ -1,17 +1,23 @@
 package nogard
 
-type Dragon struct {
-	Name         string     `json:"name"`
-	Description  string     `json:"description"`
-	Type         string     `json:"type"`
-	Elements     []string   `json:"elements"`
-	Latent       []string   `json:"latent"`
-	Time         int        `json:"time"`
-	Availability string     `json:"availability"`
-	Breeding     [][]string `json:"breeding"`
-}
+import "time"
 
-type DragonService interface {
-	SearchDragon(query string) ([]string, error)
-	DragonInfo(name string) (*Dragon, error)
+type Availability uint8
+
+const (
+	Permanent Availability = iota
+	Available
+	Unavailable
+)
+
+type Dragon struct {
+	Name         string        `json:"name"`
+	Description  string        `json:"description"`
+	Earnings     []int         `json:"earnings"`
+	Availability Availability  `json:"availability"`
+	Incubation   time.Duration `json:"incubation"`
+	Rarity       Rarity        `json:"rarity"`
+	Elements     []string      `json:"elements"`
+	Latent       []string      `json:"latent"`
+	Breeding     [][]string    `json:"breeding"`
 }
