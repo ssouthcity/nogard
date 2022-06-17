@@ -125,7 +125,7 @@ func NewSearchHandler(searcher DragonSearcher) func(s *discordgo.Session, i *dis
 
 		for i, res := range results {
 			choices[i] = &discordgo.ApplicationCommandOptionChoice{
-				Name:  res,
+				Name:  strings.TrimSuffix(res, " Dragon"),
 				Value: res,
 			}
 		}
