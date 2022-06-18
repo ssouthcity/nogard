@@ -22,7 +22,7 @@ func NewDragonService() *DragonService {
 	return ds
 }
 
-func (s *DragonService) SearchDragon(query string) ([]string, error) {
+func (s *DragonService) SearchDragons(query string) ([]string, error) {
 	suggestions := []string{}
 
 	for name := range s.dragons {
@@ -34,7 +34,7 @@ func (s *DragonService) SearchDragon(query string) ([]string, error) {
 	return suggestions, nil
 }
 
-func (s *DragonService) DragonDetails(name string) (*nogard.Dragon, error) {
+func (s *DragonService) Dragon(name string) (*nogard.Dragon, error) {
 	if dragon, ok := s.dragons[name]; ok {
 		return dragon, nil
 	}

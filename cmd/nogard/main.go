@@ -43,18 +43,12 @@ func main() {
 	select {}
 }
 
-type InteractionHandlerFunc func(s *discordgo.Session, i *discordgo.InteractionCreate)
-
-type DragonDetailser interface {
-	DragonDetails(name string) (*nogard.Dragon, error)
-}
-
-func NewDragonInfoHandler(details DragonDetailser) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func NewDragonInfoHandler(dragonsrv nogard.DragonEncyclopedia) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	return func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		data := i.ApplicationCommandData()
 		name := data.Options[0].StringValue()
 
-		dragon, err := details.DragonDetails(name)
+		dragon, err := dragonsrv.Dragon(name)
 		if err != nil {
 			log.Fatalf("unable to find info '%s'", err)
 		}
@@ -103,16 +97,12 @@ func NewDragonInfoHandler(details DragonDetailser) func(s *discordgo.Session, i 
 	}
 }
 
-type DragonSearcher interface {
-	SearchDragon(query string) ([]string, error)
-}
-
-func NewSearchHandler(searcher DragonSearcher) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+func NewSearchHandler(dragonsrv nogard.DragonEncyclopedia) func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 	return func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 		data := i.ApplicationCommandData()
 		query := data.Options[0].StringValue()
 
-		results, err := searcher.SearchDragon(query)
+		results, err := dragonsrv.SearchDragons(query)
 		if err != nil {
 			log.Fatalf("unable to search '%s'", err)
 		}

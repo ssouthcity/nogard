@@ -2,6 +2,11 @@ package nogard
 
 import "time"
 
+type DragonEncyclopedia interface {
+	SearchDragons(query string) ([]string, error)
+	Dragon(name string) (*Dragon, error)
+}
+
 type Dragon struct {
 	Name         string        `json:"name"`
 	Description  string        `json:"description"`
