@@ -66,6 +66,8 @@ jobs:
     
     - name: Encode token
       run: echo "NOGARD_TOKEN_BASE64=$(base64 -w 0 <<< $NOGARD_TOKEN)" >> $GITHUB_ENV
+      env:
+        NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
 
     - name: Apply new configuration
       run: cat k8s/*.yaml | envsubst | kubectl apply -f -
