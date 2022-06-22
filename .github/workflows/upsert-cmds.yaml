@@ -1,0 +1,21 @@
+name: Upsert Application Commands
+
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "cmd/nogard-upsert-cmds/**" ]
+
+jobs:
+  upsert-cmds:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.17.0'
+    
+    - name: Run upsert tool
+      run: go run cmd/nogard-upsert-cmds/main.go
+      env:
+        NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
