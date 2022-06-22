@@ -48,7 +48,7 @@ jobs:
     - uses: docker/build-push-action@v3
       with:
         push: true
-        tags: ${DOCKER_REPOSITORY}:${{ github.sha }}
+        tags: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
   
   deploy:
     runs-on: ubuntu-latest
@@ -66,5 +66,5 @@ jobs:
     - name: Apply new configuration
       run: cat k8s/*.yaml | envsubst - | kubectl apply -f -
       env:
-        NOGARD_IMAGE: ${DOCKER_REPOSITORY}:${{ github.sha }}
+        NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
         NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
