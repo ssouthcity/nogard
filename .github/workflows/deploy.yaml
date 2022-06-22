@@ -65,7 +65,7 @@ jobs:
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 main-cluster
     
     - name: Encode token
-      run: echo "NOGARD_TOKEN_BASE64=$(base64 -w 0 <<< $NOGARD_TOKEN)" >> $GITHUB_ENV
+      run: echo -n "NOGARD_TOKEN_BASE64=$(base64 -w 0 <<< $NOGARD_TOKEN)" >> $GITHUB_ENV
       env:
         NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
 
