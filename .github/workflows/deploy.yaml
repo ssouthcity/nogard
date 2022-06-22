@@ -63,9 +63,12 @@ jobs:
 
     - name: Download kubeconfig
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 main-cluster
+    
+    - name: Encode token
+      run: echo "NOGARD_TOKEN_BASE64=$(base64 -w 0 <<< $NOGARD_TOKEN)" >> $GITHUB_ENV
 
     - name: Apply new configuration
-      run: cat k8s/*.yaml | envsubst - | kubectl apply -f -
+      run: cat k8s/*.yaml | envsubst | kubectl apply -f -
       env:
         NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
-        NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
+        NOGARD_TOKEN: ${{ env.NOGARD_TOKEN_BASE64 }}
