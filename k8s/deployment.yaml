@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nogard-deployment
+  name: nogard
   namespace: nogard
   labels:
     app: nogard
@@ -17,11 +17,11 @@ spec:
     spec:
       containers:
       - name: nogard
-        image: ssouthcity/nogard:latest
+        image: $NOGARD_IMAGE
         imagePullPolicy: Always
         env:
         - name: NOGARD_TOKEN
           valueFrom:
             secretKeyRef:
-              name: nogard-secrets
+              name: nogard-secret
               key: discord_token
