@@ -1,0 +1,14 @@
+apiVersion: v1
+data:
+  discord_token: T1RneE1qTTFNelEwTVRJM01UWTROVFl5Lkc2SUpSdy5UVlhCUXpIWmdVbWprZjV6X3p4TUFyZXgwMjNWZGlHMHZEbUtSbwo=
+kind: Secret
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","data":{"discord_token":"T1RneE1qTTFNelEwTVRJM01UWTROVFl5Lkc2SUpSdy5UVlhCUXpIWmdVbWprZjV6X3p4TUFyZXgwMjNWZGlHMHZEbUtSbwo="},"kind":"Secret","metadata":{"annotations":{},"name":"nogard-secret","namespace":"nogard"},"type":"Opaque"}
+  creationTimestamp: "2022-06-22T20:23:55Z"
+  name: nogard-secret
+  namespace: nogard
+  resourceVersion: "2020942"
+  uid: 63cdc9a4-85bf-440c-952c-04b675b9758c
+type: Opaque
