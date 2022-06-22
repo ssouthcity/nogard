@@ -57,7 +57,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - uses: digitalocean/actions-doctl@v2
+    - uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
