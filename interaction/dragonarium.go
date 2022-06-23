@@ -35,13 +35,19 @@ func (h *dragonariumHandler) dragonariumCommand(s *discordgo.Session, i *discord
 				Inline: true,
 			},
 			{
-				Name:   "Breeding",
+				Name:   "Breeding Time",
 				Value:  fmt.Sprintf("Regular: %s\nUpgraded: %s", dragon.BreedingTime(false), dragon.BreedingTime(true)),
 				Inline: true,
 			},
 			{
-				Name:  "Earnings",
-				Value: fmt.Sprintf("%+v", dragon.Earnings),
+				Name: "Cash Per Minute",
+				Value: fmt.Sprintf("```lvl  %4d\t%4d\t%4d\t%4d\t%4d\ngold %4d\t%4d\t%4d\t%4d\t%4d```",
+					1, 5, 10, 15, 20,
+					dragon.CashPerMinute(1),
+					dragon.CashPerMinute(5),
+					dragon.CashPerMinute(10),
+					dragon.CashPerMinute(15),
+					dragon.CashPerMinute(20)),
 			},
 		},
 	}

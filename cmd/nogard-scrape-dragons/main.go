@@ -106,7 +106,8 @@ func scrapeDragon(pageID int) (d nogard.Dragon) {
 				continue
 			}
 
-			d.Earnings = append(d.Earnings, val)
+			d.StartingCash = float64(val)
+			break
 		}
 	}
 

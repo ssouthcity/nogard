@@ -1,6 +1,9 @@
 package nogard
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 type DragonEncyclopedia interface {
 	SearchDragons(query string) ([]string, error)
@@ -10,13 +13,13 @@ type DragonEncyclopedia interface {
 type Dragon struct {
 	Name         string        `json:"name"`
 	Description  string        `json:"description"`
-	Earnings     []int         `json:"earnings"`
+	StartingCash float64       `json:"starting_cash"`
 	Availability Availability  `json:"availability"`
 	Incubation   time.Duration `json:"incubation"`
 	Rarity       Rarity        `json:"rarity"`
+	Habitats     []string      `json:"habitats"`
 	Elements     []string      `json:"elements"`
-	Latent       []string      `json:"latent"`
-	Breeding     [][]string    `json:"breeding"`
+	Combo        []string      `json:"combo"`
 }
 
 func (d *Dragon) BreedingTime(upgraded bool) time.Duration {
@@ -26,4 +29,9 @@ func (d *Dragon) BreedingTime(upgraded bool) time.Duration {
 	}
 
 	return time.Duration(float64(d.Incubation.Nanoseconds()) * modifier)
+}
+
+func (d *Dragon) CashPerMinute(level int) int {
+	modifier := float64(level-1) * (0.6 * d.StartingCash)
+	return (int)(math.Round(d.StartingCash + modifier))
 }
