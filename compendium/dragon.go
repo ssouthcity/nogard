@@ -3,6 +3,7 @@ package compendium
 import (
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -39,9 +40,9 @@ func (e *DragonEncyclopedia) setCategory(ctype string, category string) error {
 func (e *DragonEncyclopedia) SearchDragons(query string) ([]string, error) {
 	var dragons []string
 
-	if err := e.setCategory("Compendium", "All"); err != nil {
-		return dragons, err
-	}
+	// if err := e.setCategory("Compendium", "All"); err != nil {
+	// 	return dragons, err
+	// }
 
 	resp, err := e.sheet.Spreadsheets.Values.Get(e.spreadsheetID, "Dragonarium!B6:C").Do()
 	if err != nil {
@@ -60,9 +61,9 @@ func (e *DragonEncyclopedia) SearchDragons(query string) ([]string, error) {
 }
 
 func (e *DragonEncyclopedia) Dragon(name string) (*nogard.Dragon, error) {
-	if err := e.setCategory("Compendium", "All"); err != nil {
-		return nil, err
-	}
+	// if err := e.setCategory("Compendium", "All"); err != nil {
+	// 	return nil, err
+	// }
 
 	resp, err := e.sheet.Spreadsheets.Get(e.spreadsheetID).Ranges("Dragonarium!B6:Q").IncludeGridData(true).Do()
 	if err != nil {
@@ -115,6 +116,11 @@ func (e *DragonEncyclopedia) cellToIncubation(cell *sheets.CellData) time.Durati
 	return dur
 }
 
+func (e *DragonEncyclopedia) cellToCash(cell *sheets.CellData) float64 {
+	v, _ := strconv.ParseFloat(cell.FormattedValue, 64)
+	return v
+}
+
 func (e *DragonEncyclopedia) mapRowToDragon(row *sheets.RowData) *nogard.Dragon {
 	d := &nogard.Dragon{}
 
@@ -123,6 +129,7 @@ func (e *DragonEncyclopedia) mapRowToDragon(row *sheets.RowData) *nogard.Dragon 
 	d.Availability = e.cellToAvailability(row.Values[2])
 	d.Combo = e.cellToBreedingCombo(row.Values[3])
 	d.Incubation = e.cellToIncubation(row.Values[4])
+	d.StartingCash = e.cellToCash(row.Values[12])
 
 	return d
 }

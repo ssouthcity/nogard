@@ -54,7 +54,7 @@ func (h *dragonariumHandler) dragonariumCommand(s *discordgo.Session, i *discord
 		})
 	}
 
-	if dragon.StartingCash != 0 {
+	if dragon.StartingCash > 0.0 {
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 			Name: "Cash Per Minute",
 			Value: fmt.Sprintf("```lvl  %5d\t%5d\t%5d\t%5d\t%5d\ngold %5d\t%5d\t%5d\t%5d\t%5d```",
