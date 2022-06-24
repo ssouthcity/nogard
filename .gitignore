@@ -16,3 +16,6 @@
 
 # Local environment Configuration
 config.sh
+
+# Local JSON web token
+credentials.json

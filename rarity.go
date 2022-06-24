@@ -12,3 +12,5 @@ const (
 	Mythic
 	Legendary
 )
+
+//go:generate stringer -type Rarity
