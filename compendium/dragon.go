@@ -16,8 +16,8 @@ type DragonEncyclopedia struct {
 	spreadsheetID string
 }
 
-func NewDragonEncyclopedia(sheetID string, credentialsPath string) (*DragonEncyclopedia, error) {
-	sheetSrv, err := sheets.NewService(nil, option.WithCredentialsFile(credentialsPath))
+func NewDragonEncyclopedia(sheetID string, credentials string) (*DragonEncyclopedia, error) {
+	sheetSrv, err := sheets.NewService(nil, option.WithCredentialsJSON([]byte(credentials)))
 	if err != nil {
 		return nil, err
 	}

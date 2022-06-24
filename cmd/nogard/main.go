@@ -16,8 +16,8 @@ func main() {
 	logger := logrus.New()
 
 	token := flag.String("token", os.Getenv("NOGARD_TOKEN"), "")
-	sheetID := flag.String("sheetID", os.Getenv("NOGARD_SHEET_ID"), "")
-	sheetCreds := flag.String("credentialsPath", os.Getenv("NOGARD_SHEET_CREDENTIALS"), "")
+	sheetID := flag.String("sheetID", os.Getenv("NOGARD_COMPENDIUM_SHEET_ID"), "")
+	sheetCreds := flag.String("credentialsPath", os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS"), "")
 	flag.Parse()
 
 	s, err := discordgo.New("Bot " + *token)

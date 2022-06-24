@@ -26,3 +26,13 @@ spec:
             secretKeyRef:
               name: nogard-secret
               key: discord_token
+        - name: NOGARD_COMPENDIUM_SHEET_ID
+          valueFrom:
+            secretKeyRef:
+              name: nogard-secret
+              key: compendium_sheet_id
+        - name: NOGARD_COMPENDIUM_SHEET_CREDENTIALS
+          valueFrom:
+            secretKeyRef:
+              name: nogard-secret
+              key: compendium_sheet_credentials
