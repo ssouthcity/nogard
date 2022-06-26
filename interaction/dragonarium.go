@@ -54,6 +54,18 @@ func (h *dragonariumHandler) dragonariumCommand(s *discordgo.Session, i *discord
 		})
 	}
 
+	habitats := make([]string, len(dragon.Habitats))
+	for i, h := range dragon.Habitats {
+		habitats[i] = fmt.Sprint(h)
+	}
+
+	if len(dragon.Habitats) > 0 {
+		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+			Name:  "Habitats",
+			Value: strings.Join(habitats, " "),
+		})
+	}
+
 	if dragon.StartingCash > 0.0 {
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
 			Name: "Cash Per Minute",

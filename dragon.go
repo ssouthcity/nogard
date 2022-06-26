@@ -18,8 +18,8 @@ type Dragon struct {
 	Availability Availability  `json:"availability"`
 	Incubation   time.Duration `json:"incubation"`
 	Rarity       Rarity        `json:"rarity"`
-	Habitats     []string      `json:"habitats"`
-	Elements     []string      `json:"elements"`
+	Habitats     []Element     `json:"habitats"`
+	Elements     []Element     `json:"elements"`
 	Combo        []string      `json:"combo"`
 }
 

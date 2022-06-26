@@ -117,6 +117,51 @@ func (e *DragonEncyclopedia) cellToCash(cell *sheets.CellData) float64 {
 	return v
 }
 
+func (e *DragonEncyclopedia) cellToHabitats(cell *sheets.CellData) []nogard.Element {
+	elStrMap := map[string]nogard.Element{
+		"P":  nogard.ElPlant,
+		"F":  nogard.ElFire,
+		"E":  nogard.ElEarth,
+		"C":  nogard.ElCold,
+		"L":  nogard.ElLightning,
+		"W":  nogard.ElWater,
+		"A":  nogard.ElAir,
+		"M":  nogard.ElMetal,
+		"l":  nogard.ElLight,
+		"D":  nogard.ElDark,
+		"Ga": nogard.ElGalaxy,
+		"R":  nogard.ElRift,
+		"Rb": nogard.ElRainbow,
+		"Ge": nogard.ElGemstone,
+		"Cr": nogard.ElCrystalline,
+		"Se": nogard.ElSeasonal,
+		"Tr": nogard.ElTreasure,
+		"Su": nogard.ElSun,
+		"Mo": nogard.ElMoon,
+		"Ol": nogard.ElOlympus,
+		"Ap": nogard.ElApocalypse,
+		"Dr": nogard.ElDream,
+		"Sn": nogard.ElSnowflake,
+		"Mh": nogard.ElMonolith,
+		"Or": nogard.ElOrnamental,
+		"Au": nogard.ElAura,
+		"Ch": nogard.ElChrysalis,
+		"Hi": nogard.ElHidden,
+		"Sf": nogard.ElSurface,
+		"Me": nogard.ElMelody,
+	}
+
+	elements := make([]nogard.Element, 0)
+
+	for key, el := range elStrMap {
+		if strings.Contains(cell.FormattedValue, key) {
+			elements = append(elements, el)
+		}
+	}
+
+	return elements
+}
+
 func (e *DragonEncyclopedia) mapRowToDragon(row *sheets.RowData) *nogard.Dragon {
 	d := &nogard.Dragon{}
 
@@ -125,6 +170,7 @@ func (e *DragonEncyclopedia) mapRowToDragon(row *sheets.RowData) *nogard.Dragon 
 	d.Availability = e.cellToAvailability(row.Values[2])
 	d.Combo = e.cellToBreedingCombo(row.Values[3])
 	d.Incubation = e.cellToIncubation(row.Values[4])
+	d.Habitats = e.cellToHabitats(row.Values[6])
 	d.StartingCash = e.cellToCash(row.Values[12])
 
 	return d
