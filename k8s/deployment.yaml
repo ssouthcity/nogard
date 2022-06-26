@@ -36,3 +36,7 @@ spec:
             secretKeyRef:
               name: nogard-secret
               key: compendium_sheet_credentials
+      - name: cache
+        image: redis
+        ports:
+        - "6379:6379"

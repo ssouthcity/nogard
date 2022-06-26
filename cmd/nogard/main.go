@@ -10,6 +10,7 @@ import (
 	"github.com/ssouthcity/nogard/compendium"
 	"github.com/ssouthcity/nogard/fandom"
 	"github.com/ssouthcity/nogard/interaction"
+	"github.com/ssouthcity/nogard/redis"
 )
 
 func main() {
@@ -33,6 +34,8 @@ func main() {
 		}
 
 		dragonSrv = fandom.NewDragonDescriptionPatcher(dragonSrv)
+
+		dragonSrv = redis.NewDragonCache(dragonSrv, logger)
 	}
 
 	r := &interaction.InteractionRouter{
