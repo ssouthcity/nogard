@@ -83,22 +83,24 @@ func (h *dragonariumHandler) dragonAutocomplete(s *discordgo.Session, i *discord
 	data := i.ApplicationCommandData()
 	query := data.Options[0].StringValue()
 
-	results, err := h.encylopedia.SearchDragons(query)
+	names, err := h.encylopedia.DragonNames()
 	if err != nil {
 		h.logger.WithError(err).WithField("query", query).Error("dragon search failed")
 		return
 	}
 
-	if len(results) > 25 {
-		results = results[:25]
+	filteredNames := nogard.FilterDragonNames(names, query)
+
+	if len(filteredNames) > 25 {
+		filteredNames = filteredNames[:25]
 	}
 
-	choices := make([]*discordgo.ApplicationCommandOptionChoice, len(results))
+	choices := make([]*discordgo.ApplicationCommandOptionChoice, len(filteredNames))
 
-	for i, res := range results {
+	for i, name := range filteredNames {
 		choices[i] = &discordgo.ApplicationCommandOptionChoice{
-			Name:  strings.TrimSuffix(res, " Dragon"),
-			Value: res,
+			Name:  name,
+			Value: name,
 		}
 	}
 

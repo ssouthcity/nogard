@@ -13,25 +13,27 @@ import (
 )
 
 type DescriptionPatcher struct {
-	rootURL      string
-	encyclopedia nogard.DragonEncyclopedia
-}
-
-func NewDragonDescriptionPatcher(encyclopedia nogard.DragonEncyclopedia) *DescriptionPatcher {
-	return &DescriptionPatcher{
-		rootURL:      "https://dragonvale.fandom.com/api.php?action=parse&format=json",
-		encyclopedia: encyclopedia,
-	}
-}
-
-func (p *DescriptionPatcher) SearchDragons(query string) ([]string, error) {
-	return p.encyclopedia.SearchDragons(query)
+	rootURL         string
+	descriptionPath *xpath.Expr
+	encyclopedia    nogard.DragonEncyclopedia
 }
 
 type parseBody struct {
 	Parse struct {
 		Text map[string]string `json:"text"`
 	} `json:"parse"`
+}
+
+func NewDragonDescriptionPatcher(encyclopedia nogard.DragonEncyclopedia) *DescriptionPatcher {
+	return &DescriptionPatcher{
+		rootURL:         "https://dragonvale.fandom.com/api.php?action=parse&format=json",
+		descriptionPath: xpath.MustCompile("//table[contains(@class, 'dragonbox')]/tbody/tr[th[contains(text(), 'Game Description')]]/following-sibling::tr[1]/td//text()"),
+		encyclopedia:    encyclopedia,
+	}
+}
+
+func (p *DescriptionPatcher) DragonNames() ([]string, error) {
+	return p.encyclopedia.DragonNames()
 }
 
 func (p *DescriptionPatcher) Dragon(name string) (*nogard.Dragon, error) {
@@ -71,9 +73,7 @@ func (p *DescriptionPatcher) Dragon(name string) (*nogard.Dragon, error) {
 		return nil, err
 	}
 
-	descXpath := xpath.MustCompile("//table[contains(@class, 'dragonbox')]/tbody/tr[th[contains(text(), 'Game Description')]]/following-sibling::tr[1]/td//text()")
-
-	descNode := htmlquery.QuerySelector(doc, descXpath)
+	descNode := htmlquery.QuerySelector(doc, p.descriptionPath)
 	if descNode != nil {
 		d.Description = descNode.Data
 	}

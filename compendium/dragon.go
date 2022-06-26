@@ -37,33 +37,29 @@ func (e *DragonEncyclopedia) setCategory(ctype string, category string) error {
 	return err
 }
 
-func (e *DragonEncyclopedia) SearchDragons(query string) ([]string, error) {
-	var dragons []string
-
-	// if err := e.setCategory("Compendium", "All"); err != nil {
-	// 	return dragons, err
-	// }
+func (e *DragonEncyclopedia) DragonNames() ([]string, error) {
+	if err := e.setCategory("Compendium", "All"); err != nil {
+		return nil, err
+	}
 
 	resp, err := e.sheet.Spreadsheets.Values.Get(e.spreadsheetID, "Dragonarium!B6:C").Do()
 	if err != nil {
-		return dragons, err
+		return nil, err
 	}
 
-	for _, row := range resp.Values {
-		n := row[0].(string)
+	dragons := make([]string, len(resp.Values))
 
-		if strings.Contains(strings.ToLower(n), strings.ToLower(query)) {
-			dragons = append(dragons, n)
-		}
+	for i, row := range resp.Values {
+		dragons[i] = row[0].(string)
 	}
 
 	return dragons, nil
 }
 
 func (e *DragonEncyclopedia) Dragon(name string) (*nogard.Dragon, error) {
-	// if err := e.setCategory("Compendium", "All"); err != nil {
-	// 	return nil, err
-	// }
+	if err := e.setCategory("Compendium", "All"); err != nil {
+		return nil, err
+	}
 
 	resp, err := e.sheet.Spreadsheets.Get(e.spreadsheetID).Ranges("Dragonarium!B6:Q").IncludeGridData(true).Do()
 	if err != nil {
