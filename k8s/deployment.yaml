@@ -39,4 +39,4 @@ spec:
       - name: cache
         image: redis
         ports:
-        - "6379:6379"
+        - containerPort: 6379
