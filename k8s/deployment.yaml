@@ -1,9 +1,7 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nogard
-  namespace: nogard
   labels:
     app: nogard
 spec:
@@ -18,24 +16,10 @@ spec:
     spec:
       containers:
       - name: nogard
-        image: $NOGARD_IMAGE
-        imagePullPolicy: Always
-        env:
-        - name: NOGARD_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: nogard-secret
-              key: discord_token
-        - name: NOGARD_COMPENDIUM_SHEET_ID
-          valueFrom:
-            secretKeyRef:
-              name: nogard-secret
-              key: compendium_sheet_id
-        - name: NOGARD_COMPENDIUM_SHEET_CREDENTIALS
-          valueFrom:
-            secretKeyRef:
-              name: nogard-secret
-              key: compendium_sheet_credentials
+        image: ssouthcity/nogard
+        envFrom:
+        - secretRef:
+            name: nogard-secrets
       - name: cache
         image: redis
         ports:

@@ -66,20 +66,16 @@ jobs:
     - name: Download kubeconfig
       run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 main-cluster
     
-    - name: Encode secrets
+    - name: Setup Kustomize
+      run: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+
+    - name: Apply configuration
+      working-directory: k8s
       run: |
-        echo "NOGARD_TOKEN_BASE64=$(echo -n $NOGARD_TOKEN | base64 -w0)" >> $GITHUB_ENV
-        echo "NOGARD_COMPENDIUM_SHEET_ID_BASE64=$(echo -n $NOGARD_COMPENDIUM_SHEET_ID | base64 -w0)" >> $GITHUB_ENV
-        echo "NOGARD_COMPENDIUM_SHEET_CREDENTIALS_BASE64=$(echo -n $NOGARD_COMPENDIUM_SHEET_CREDENTIALS | base64 -w0)" >> $GITHUB_ENV
+        kustomize edit set image $NOGARD_IMAGE
+        kustomize build | kubectl apply -f -
       env:
+        NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
         NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
         NOGARD_COMPENDIUM_SHEET_ID: ${{ secrets.NOGARD_COMPENDIUM_SHEET_ID }}
         NOGARD_COMPENDIUM_SHEET_CREDENTIALS: ${{ secrets.NOGARD_COMPENDIUM_SHEET_CREDENTIALS }}
-
-    - name: Apply new configuration
-      run: cat k8s/*.yaml | envsubst | kubectl apply -f -
-      env:
-        NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
-        NOGARD_TOKEN: ${{ env.NOGARD_TOKEN_BASE64 }}
-        NOGARD_COMPENDIUM_SHEET_ID: ${{ env.NOGARD_COMPENDIUM_SHEET_ID_BASE64 }}
-        NOGARD_COMPENDIUM_SHEET_CREDENTIALS: ${{ env.NOGARD_COMPENDIUM_SHEET_CREDENTIALS_BASE64 }}
