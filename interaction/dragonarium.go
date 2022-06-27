@@ -79,6 +79,16 @@ func (h *dragonariumHandler) dragonariumCommand(s *discordgo.Session, i *discord
 		})
 	}
 
+	emoji := &discordgo.Emoji{
+		ID:   "589620333221380106",
+		Name: "nassar",
+	}
+
+	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
+		Name:  "Example",
+		Value: emoji.MessageFormat(),
+	})
+
 	embeds := []*discordgo.MessageEmbed{embed}
 
 	if _, err := s.InteractionResponseEdit(i.Interaction, &discordgo.WebhookEdit{
