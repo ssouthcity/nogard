@@ -50,7 +50,7 @@ jobs:
       with:
         push: true
         tags: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }},${{ env.DOCKER_REPOSITORY }}:latest
-        cache-from: type=registry,ref=user/app:latest
+        cache-from: type=registry,ref=${{ env.DOCKER_REPOSITORY }}:latest
         cache-to: type=inline
   
   deploy:
