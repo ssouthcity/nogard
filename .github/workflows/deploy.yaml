@@ -49,9 +49,9 @@ jobs:
     - uses: docker/build-push-action@v3
       with:
         push: true
-        tags: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
+        tags: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }},${{ env.DOCKER_REPOSITORY }}:latest
+        cache-from: type=registry,ref=user/app:latest
+        cache-to: type=inline
   
   deploy:
     runs-on: ubuntu-latest
