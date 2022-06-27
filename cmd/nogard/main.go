@@ -35,7 +35,7 @@ func main() {
 
 		dragonSrv = fandom.NewDragonDescriptionPatcher(dragonSrv)
 
-		dragonSrv = redis.NewDragonCache(dragonSrv, logger)
+		dragonSrv = redis.NewDragonCache("localhost:6379", dragonSrv, logger)
 	}
 
 	r := &interaction.InteractionRouter{

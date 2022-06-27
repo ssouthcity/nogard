@@ -17,11 +17,11 @@ type DragonCache struct {
 	logger logrus.FieldLogger
 }
 
-func NewDragonCache(srv nogard.DragonEncyclopedia, logger logrus.FieldLogger) *DragonCache {
-	client := redis.NewClient(&redis.Options{})
+func NewDragonCache(addr string, srv nogard.DragonEncyclopedia, logger logrus.FieldLogger) *DragonCache {
+	client := redis.NewClient(&redis.Options{Addr: addr})
 
 	if err := client.Ping(context.Background()).Err(); err != nil {
-		logger.WithError(err).Warn("unable to connect to redis, opting out of cache")
+		logger.WithError(err).WithField("address", addr).Warn("unable to connect to redis, opting out of cache")
 	}
 
 	return &DragonCache{client, srv, logger}
