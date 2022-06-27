@@ -11,4 +11,4 @@ COPY . .
 
 RUN go build -o ./nogard cmd/nogard/main.go
 
-CMD [ "./nogard" ]
+ENTRYPOINT [ "./nogard" ]

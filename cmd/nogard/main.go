@@ -18,7 +18,8 @@ func main() {
 
 	token := flag.String("token", os.Getenv("NOGARD_TOKEN"), "")
 	sheetID := flag.String("sheetID", os.Getenv("NOGARD_COMPENDIUM_SHEET_ID"), "")
-	sheetCreds := flag.String("credentialsPath", os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS"), "")
+	sheetCreds := flag.String("sheetCredentials", os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS"), "")
+	redisAddr := flag.String("redis", os.Getenv("NOGARD_REDIS_ADDRESS"), "")
 	flag.Parse()
 
 	s, err := discordgo.New("Bot " + *token)
@@ -35,7 +36,7 @@ func main() {
 
 		dragonSrv = fandom.NewDragonDescriptionPatcher(dragonSrv)
 
-		dragonSrv = redis.NewDragonCache("localhost:6379", dragonSrv, logger)
+		dragonSrv = redis.NewDragonCache(*redisAddr, dragonSrv, logger)
 	}
 
 	r := &interaction.InteractionRouter{

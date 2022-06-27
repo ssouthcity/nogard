@@ -15,7 +15,7 @@ func main() {
 	logger := logrus.New()
 
 	sheetID := flag.String("sheetID", os.Getenv("NOGARD_COMPENDIUM_SHEET_ID"), "")
-	sheetCreds := flag.String("credentialsPath", os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS"), "")
+	sheetCreds := flag.String("sheetCredentials", os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS"), "")
 	redisAddr := flag.String("redis", os.Getenv("NOGARD_REDIS_ADDRESS"), "")
 	flag.Parse()
 
