@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
 	"github.com/sirupsen/logrus"
@@ -17,15 +16,14 @@ func main() {
 
 	sheetID := flag.String("sheetID", os.Getenv("NOGARD_COMPENDIUM_SHEET_ID"), "")
 	sheetCreds := flag.String("credentialsPath", os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS"), "")
+	redisAddr := flag.String("redis", os.Getenv("NOGARD_REDIS_ADDRESS"), "")
 	flag.Parse()
-
-	redisAddr := fmt.Sprintf("%s:%s", os.Getenv("REDIS_SERVICE_HOST"), os.Getenv("REDIS_SERVICE_PORT"))
 
 	var dragonSrv nogard.DragonEncyclopedia
 	{
 		dragonSrv, _ = compendium.NewDragonEncyclopedia(*sheetID, *sheetCreds)
 		dragonSrv = fandom.NewDragonDescriptionPatcher(dragonSrv)
-		dragonSrv = redis.NewDragonCache(redisAddr, dragonSrv, logger)
+		dragonSrv = redis.NewDragonCache(*redisAddr, dragonSrv, logger)
 	}
 
 	names, err := dragonSrv.DragonNames()
