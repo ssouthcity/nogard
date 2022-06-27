@@ -1,18 +1,17 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: cache-preload
+  name: redis-preload
 spec:
   template:
     spec:
       containers:
-      - name: cache-preload
+      - name: redis-preload
         image: golang
         command: ["/bin/sh", "-c"]
         args:
-        - go install github.com/ssouthcity/nogard/cmd/nogard-preload-cache@latest;
-          printenv | grep SERVICE;
-          nogard-preload-cache
+        - GOPROXY=direct go install github.com/ssouthcity/nogard/cmd/nogard-preload-cache@latest;
+          nogard-preload-cache -redis="$REDIS_SRV_SERVICE_HOST:$REDIS_SRV_SERVICE_PORT"
         envFrom:
         - secretRef:
             name: nogard-secrets

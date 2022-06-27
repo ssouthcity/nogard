@@ -3,8 +3,10 @@ kind: Kustomization
 resources:
 - deployment.yaml
 - namespace.yaml
-- redis-service.yaml
-- cache-cronjob.yaml
+- redis/deployment.yaml
+- redis/volume.yaml
+- redis/service.yaml
+- redis/cronjob.yaml
 
 namespace: nogard
 

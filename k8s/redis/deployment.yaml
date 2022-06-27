@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: nogard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nogard
+  template:
+    metadata:
+      labels:
+        app: nogard
+    spec:
+      containers:
+      - name: redis
+        image: redis
+        ports:
+        - containerPort: 6379
+          protocol: TCP
+        volumeMounts:
+        - name: redis-volume
+          mountPath: /data
+      volumes:
+      - name: redis-volume
+        persistentVolumeClaim:
+          claimName: redis-pvc

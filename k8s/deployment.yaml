@@ -17,10 +17,7 @@ spec:
       containers:
       - name: nogard
         image: ssouthcity/nogard
+        command: [ "nogard", "-redis=\"$REDIS_SRV_SERVICE_HOST:$REDIS_SRV_SERVICE_PORT\"" ]
         envFrom:
         - secretRef:
             name: nogard-secrets
-      - name: cache
-        image: redis
-        ports:
-        - containerPort: 6379
