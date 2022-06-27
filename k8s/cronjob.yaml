@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: preload-cache
+spec:
+  schedule: "@daily"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: redis-preload
+            image: golang
+            command: ["/bin/sh", "-c"]
+            args:
+            - GOPROXY=direct go install github.com/ssouthcity/nogard/cmd/nogard-preload-cache@latest;
+              nogard-preload-cache -redis="$REDIS_SRV_SERVICE_HOST:$REDIS_SRV_SERVICE_PORT"
+            envFrom:
+            - secretRef:
+                name: nogard-secrets
+          restartPolicy: OnFailure
