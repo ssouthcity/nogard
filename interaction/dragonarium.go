@@ -47,22 +47,25 @@ func (h *dragonariumHandler) dragonariumCommand(s *discordgo.Session, i *discord
 		},
 	}
 
-	if len(dragon.Combo) != 0 {
+	if len(dragon.Habitats) > 0 {
+		emotes := ""
+
+		for _, h := range dragon.Habitats {
+			emotes += ElementEmotes[h].MessageFormat() + " "
+		}
+
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:  "Breeding Combination",
-			Value: strings.Join(dragon.Combo, " + "),
+			Name:   "Habitats",
+			Value:  emotes,
+			Inline: true,
 		})
 	}
 
-	habitats := make([]string, len(dragon.Habitats))
-	for i, h := range dragon.Habitats {
-		habitats[i] = fmt.Sprint(h)
-	}
-
-	if len(dragon.Habitats) > 0 {
+	if len(dragon.Combo) != 0 {
 		embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-			Name:  "Habitats",
-			Value: strings.Join(habitats, " "),
+			Name:   "Breeding Combination",
+			Value:  strings.Join(dragon.Combo, " + "),
+			Inline: true,
 		})
 	}
 
@@ -78,16 +81,6 @@ func (h *dragonariumHandler) dragonariumCommand(s *discordgo.Session, i *discord
 				dragon.CashPerMinute(20)),
 		})
 	}
-
-	emoji := &discordgo.Emoji{
-		ID:   "589620333221380106",
-		Name: "nassar",
-	}
-
-	embed.Fields = append(embed.Fields, &discordgo.MessageEmbedField{
-		Name:  "Example",
-		Value: emoji.MessageFormat(),
-	})
 
 	embeds := []*discordgo.MessageEmbed{embed}
 
