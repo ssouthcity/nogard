@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: cache-preload
+spec:
+  template:
+    spec:
+      containers:
+      - name: cache-preload
+        image: golang
+        command: ["/bin/sh", "-c"]
+        args:
+        - go install github.com/ssouthcity/nogard/cmd/nogard-preload-cache@latest;
+          printenv | grep SERVICE;
+          nogard-preload-cache
+        envFrom:
+        - secretRef:
+            name: nogard-secrets
+      restartPolicy: Never
+  backoffLimit: 4
