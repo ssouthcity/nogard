@@ -19,6 +19,9 @@ spec:
         image: ssouthcity/nogard
         args: 
         - "-redis=$(REDIS_SRV_SERVICE_HOST):$(REDIS_SRV_SERVICE_PORT)"
+        env:
+        - name: NOGARD_REDIS_ADDRESS
+          value: "$(REDIS_SRV_SERVICE_HOST):$(REDIS_SRV_SERVICE_PORT)"
         envFrom:
         - secretRef:
             name: nogard-secrets

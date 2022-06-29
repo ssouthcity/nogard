@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/base64"
-	"flag"
 	"fmt"
 	"io"
 	"os"
@@ -13,11 +12,10 @@ import (
 )
 
 func main() {
-	token := flag.String("token", os.Getenv("NOGARD_TOKEN"), "")
-	guild := flag.String("guild", os.Getenv("NOGARD_GUILD"), "")
-	flag.Parse()
+	token := os.Getenv("NOGARD_TOKEN")
+	guild := os.Getenv("NOGARD_GUILD")
 
-	s, err := discordgo.New("Bot " + *token)
+	s, err := discordgo.New("Bot " + token)
 	if err != nil {
 		log.WithError(err).Fatal("invalid session configuration")
 	}
@@ -32,7 +30,7 @@ func main() {
 		log.WithError(err).Fatal("unable to open directory")
 	}
 
-	emojis, err := s.GuildEmojis(*guild)
+	emojis, err := s.GuildEmojis(guild)
 	if err != nil {
 		log.WithError(err).Fatal("could not fetch emotes")
 	}
@@ -68,7 +66,7 @@ Main:
 
 			encStr := fmt.Sprintf("data:image/png;base64,%s", base64.StdEncoding.EncodeToString(buf))
 
-			if _, err := s.GuildEmojiCreate(*guild, emoteName, encStr, nil); err != nil {
+			if _, err := s.GuildEmojiCreate(guild, emoteName, encStr, nil); err != nil {
 				log.WithError(err).WithField("name", emoteName).Fatal("unable to create emote")
 			}
 

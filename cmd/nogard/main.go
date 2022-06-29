@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"os"
 
 	"github.com/bwmarrin/discordgo"
@@ -16,27 +15,26 @@ import (
 func main() {
 	logger := logrus.New()
 
-	token := flag.String("token", os.Getenv("NOGARD_TOKEN"), "")
-	sheetID := flag.String("sheetID", os.Getenv("NOGARD_COMPENDIUM_SHEET_ID"), "")
-	sheetCreds := flag.String("sheetCredentials", os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS"), "")
-	redisAddr := flag.String("redis", os.Getenv("NOGARD_REDIS_ADDRESS"), "")
-	flag.Parse()
+	token := os.Getenv("NOGARD_TOKEN")
+	sheetID := os.Getenv("NOGARD_COMPENDIUM_SHEET_ID")
+	sheetCreds := os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS")
+	redisAddr := os.Getenv("NOGARD_REDIS_ADDRESS")
 
-	s, err := discordgo.New("Bot " + *token)
+	s, err := discordgo.New("Bot " + token)
 	if err != nil {
 		logger.WithError(err).Fatal("invalid session configuration")
 	}
 
 	var dragonSrv nogard.DragonEncyclopedia
 	{
-		dragonSrv, err = compendium.NewDragonEncyclopedia(*sheetID, *sheetCreds)
+		dragonSrv, err = compendium.NewDragonEncyclopedia(sheetID, sheetCreds)
 		if err != nil {
-			logger.WithError(err).WithField("sheetID", *sheetID).Fatal("couldn't initialize encyclopedia service")
+			logger.WithError(err).WithField("sheetID", sheetID).Fatal("couldn't initialize encyclopedia service")
 		}
 
 		dragonSrv = fandom.NewDragonDescriptionPatcher(dragonSrv)
 
-		dragonSrv = redis.NewDragonCache(*redisAddr, dragonSrv, logger)
+		dragonSrv = redis.NewDragonCache(redisAddr, dragonSrv, logger)
 	}
 
 	r := &interaction.InteractionRouter{
