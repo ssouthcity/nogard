@@ -3,6 +3,7 @@ package compendium
 import (
 	"errors"
 	"fmt"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -127,7 +128,7 @@ func (e *DragonEncyclopedia) cellToHabitats(cell *sheets.CellData) []nogard.Elem
 		"W":  nogard.ElWater,
 		"A":  nogard.ElAir,
 		"M":  nogard.ElMetal,
-		"l":  nogard.ElLight,
+		"I":  nogard.ElLight,
 		"D":  nogard.ElDark,
 		"Ga": nogard.ElGalaxy,
 		"R":  nogard.ElRift,
@@ -153,10 +154,12 @@ func (e *DragonEncyclopedia) cellToHabitats(cell *sheets.CellData) []nogard.Elem
 
 	elements := make([]nogard.Element, 0)
 
-	for key, el := range elStrMap {
-		if strings.Contains(cell.FormattedValue, key) {
-			elements = append(elements, el)
-		}
+	re := regexp.MustCompile("[A-Z][^A-Z]*")
+
+	segs := re.FindAllString(cell.FormattedValue, -1)
+
+	for _, seg := range segs {
+		elements = append(elements, elStrMap[seg])
 	}
 
 	return elements
