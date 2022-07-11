@@ -2,7 +2,6 @@ package compendium
 
 import (
 	"errors"
-	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -30,20 +29,8 @@ func NewDragonEncyclopedia(sheetID string, credentials string) (*DragonEncyclope
 	}, nil
 }
 
-func (e *DragonEncyclopedia) setCategory(ctype string, category string) error {
-	_, err := e.sheet.Spreadsheets.Values.Update(e.spreadsheetID, "Dragonarium!E1:E2", &sheets.ValueRange{
-		Values: [][]interface{}{{ctype}, {category}},
-	}).ValueInputOption("USER_ENTERED").Do()
-
-	return err
-}
-
 func (e *DragonEncyclopedia) DragonNames() ([]string, error) {
-	if err := e.setCategory("Compendium", "All"); err != nil {
-		return nil, err
-	}
-
-	resp, err := e.sheet.Spreadsheets.Values.Get(e.spreadsheetID, "Dragonarium!B6:C").Do()
+	resp, err := e.sheet.Spreadsheets.Values.Get(e.spreadsheetID, "Data!A2:A").Do()
 	if err != nil {
 		return nil, err
 	}
@@ -58,19 +45,14 @@ func (e *DragonEncyclopedia) DragonNames() ([]string, error) {
 }
 
 func (e *DragonEncyclopedia) Dragon(name string) (*nogard.Dragon, error) {
-	if err := e.setCategory("Compendium", "All"); err != nil {
-		return nil, err
-	}
-
-	resp, err := e.sheet.Spreadsheets.Get(e.spreadsheetID).Ranges("Dragonarium!B6:Q").IncludeGridData(true).Do()
+	resp, err := e.sheet.Spreadsheets.Values.Get(e.spreadsheetID, "Data!A2:CA").Do()
 	if err != nil {
 		return nil, err
 	}
 
-	for _, row := range resp.Sheets[0].Data[0].RowData {
-		n := row.Values[0].EffectiveValue.StringValue
-
-		if strings.EqualFold(*n, name) {
+	for _, row := range resp.Values {
+		n := row[0].(string)
+		if strings.EqualFold(n, name) {
 			return e.mapRowToDragon(row), nil
 		}
 	}
@@ -78,17 +60,23 @@ func (e *DragonEncyclopedia) Dragon(name string) (*nogard.Dragon, error) {
 	return nil, errors.New("dragon not found")
 }
 
-func (e *DragonEncyclopedia) cellToRarity(cell *sheets.CellData) nogard.Rarity {
+func (e *DragonEncyclopedia) rowToRarity(row []interface{}) nogard.Rarity {
+	rarity := row[3].(string)
+
 	rarityMap := map[string]nogard.Rarity{"Primary Rift": nogard.Rare}
 	for r := nogard.Primary; r <= nogard.Legendary; r++ {
 		rarityMap[r.String()] = r
 	}
-	return rarityMap[cell.FormattedValue]
+
+	return rarityMap[rarity]
 }
 
-func (e *DragonEncyclopedia) cellToAvailability(cell *sheets.CellData) nogard.Availability {
-	if cell.FormattedValue == "Y" {
-		if cell.EffectiveFormat.TextFormat.ForegroundColor.Green == 1.0 {
+func (e *DragonEncyclopedia) rowToAvailability(row []interface{}) nogard.Availability {
+	isLimited, _ := strconv.ParseBool(row[2].(string))
+	isLegacy, _ := strconv.ParseBool(row[7].(string))
+
+	if isLegacy {
+		if isLimited {
 			return nogard.Available
 		} else {
 			return nogard.Unavailable
@@ -97,28 +85,25 @@ func (e *DragonEncyclopedia) cellToAvailability(cell *sheets.CellData) nogard.Av
 	return nogard.Permanent
 }
 
-func (e *DragonEncyclopedia) cellToBreedingCombo(cell *sheets.CellData) []string {
-	if cell.FormattedValue == "" {
+func (e *DragonEncyclopedia) rowToBreedingCombo(row []interface{}) []string {
+	combo := row[75].(string)
+	if combo == "" {
 		return make([]string, 0)
 	}
-	return strings.Split(cell.FormattedValue, "+")
+	return strings.Split(combo, "+")
 }
 
-func (e *DragonEncyclopedia) cellToIncubation(cell *sheets.CellData) time.Duration {
-	segs := strings.Split(cell.FormattedValue, ":")
-
-	durStr := fmt.Sprintf("%sh%sm%ss", segs[0], segs[1], segs[2])
-	dur, _ := time.ParseDuration(durStr)
-
-	return dur
+func (e *DragonEncyclopedia) rowToIncubation(row []interface{}) time.Duration {
+	seconds, _ := strconv.ParseInt(row[1].(string), 10, 64)
+	return time.Duration(seconds) * time.Second
 }
 
-func (e *DragonEncyclopedia) cellToCash(cell *sheets.CellData) float64 {
-	v, _ := strconv.ParseFloat(cell.FormattedValue, 64)
-	return v
+func (e *DragonEncyclopedia) rowToCash(row []interface{}) float64 {
+	earn, _ := strconv.ParseFloat(row[34].(string), 64)
+	return 60.0 / earn * 100
 }
 
-func (e *DragonEncyclopedia) cellToHabitats(cell *sheets.CellData) []nogard.Element {
+func (e *DragonEncyclopedia) rowToHabitats(row []interface{}) []nogard.Element {
 	elStrMap := map[string]nogard.Element{
 		"P":  nogard.ElPlant,
 		"F":  nogard.ElFire,
@@ -156,7 +141,7 @@ func (e *DragonEncyclopedia) cellToHabitats(cell *sheets.CellData) []nogard.Elem
 
 	re := regexp.MustCompile("[A-Z][^A-Z]*")
 
-	segs := re.FindAllString(cell.FormattedValue, -1)
+	segs := re.FindAllString(row[76].(string), -1)
 
 	for _, seg := range segs {
 		elements = append(elements, elStrMap[seg])
@@ -165,16 +150,14 @@ func (e *DragonEncyclopedia) cellToHabitats(cell *sheets.CellData) []nogard.Elem
 	return elements
 }
 
-func (e *DragonEncyclopedia) mapRowToDragon(row *sheets.RowData) *nogard.Dragon {
-	d := &nogard.Dragon{}
-
-	d.Name = row.Values[0].FormattedValue
-	d.Rarity = e.cellToRarity(row.Values[1])
-	d.Availability = e.cellToAvailability(row.Values[2])
-	d.Combo = e.cellToBreedingCombo(row.Values[3])
-	d.Incubation = e.cellToIncubation(row.Values[4])
-	d.Habitats = e.cellToHabitats(row.Values[6])
-	d.StartingCash = e.cellToCash(row.Values[12])
-
-	return d
+func (e *DragonEncyclopedia) mapRowToDragon(row []interface{}) *nogard.Dragon {
+	return &nogard.Dragon{
+		Name:         row[0].(string),
+		Incubation:   e.rowToIncubation(row),
+		Availability: e.rowToAvailability(row),
+		Rarity:       e.rowToRarity(row),
+		Combo:        e.rowToBreedingCombo(row),
+		StartingCash: e.rowToCash(row),
+		Habitats:     e.rowToHabitats(row),
+	}
 }
