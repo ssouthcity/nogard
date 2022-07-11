@@ -6,9 +6,9 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
 	"github.com/ssouthcity/nogard"
-	"github.com/ssouthcity/nogard/compendium"
-	"github.com/ssouthcity/nogard/fandom"
-	"github.com/ssouthcity/nogard/interaction"
+	"github.com/ssouthcity/nogard/pkg/compendium"
+	"github.com/ssouthcity/nogard/pkg/fandom"
+	"github.com/ssouthcity/nogard/pkg/interaction"
 )
 
 func main() {

@@ -5,9 +5,9 @@ import (
 
 	"github.com/sirupsen/logrus"
 	"github.com/ssouthcity/nogard"
-	"github.com/ssouthcity/nogard/compendium"
-	"github.com/ssouthcity/nogard/fandom"
-	"github.com/ssouthcity/nogard/redis"
+	"github.com/ssouthcity/nogard/pkg/compendium"
+	"github.com/ssouthcity/nogard/pkg/fandom"
+	"github.com/ssouthcity/nogard/pkg/redis"
 )
 
 func main() {
