@@ -19,3 +19,10 @@ config.sh
 
 # Local JSON web token
 credentials.json
+
+# VSCode Settings
+.vscode/**/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
