@@ -1,3 +1,6 @@
 {
-    "makefile.extensionOutputFolder": "./.vscode"
+    "makefile.extensionOutputFolder": "./.vscode",
+    "yaml.schemas": {
+        "https://json.schemastore.org/github-workflow.json": "file:///home/ssouth/src/nogard/.github/workflows/deploy.yaml"
+    }
 }

@@ -2,80 +2,79 @@ name: Deploy Application
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
-    - ".github/workflows/deploy.yaml"
-    - "Dockerfile"
-    - "k8s/**"
-    - "**.go"
-    - "cmd/nogard/**"
-    - "!cmd/**"
+      - ".github/workflows/deploy.yaml"
+      - "Dockerfile"
+      - "k8s/**"
+      - "**.go"
+      - "cmd/nogard/**"
+      - "!cmd/**"
 
 env:
   DOCKER_REPOSITORY: ssouthcity/nogard
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - uses: actions/setup-go@v3
-      with:
-        go-version: '>=1.17.0'
-    
-    - name: Build application
-      run: go build cmd/nogard/*
-    
-    - name: Run tests
-      run: go test ./...
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.17.0"
+
+      - name: Build application
+        run: go build cmd/nogard/*
+
+      - name: Run tests
+        run: go test ./...
 
   build:
     runs-on: ubuntu-latest
     needs: test
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-qemu-action@v2
 
-    - uses: docker/setup-buildx-action@v2
-  
-    - uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - uses: docker/setup-buildx-action@v2
 
-    - uses: docker/build-push-action@v3
-      with:
-        push: true
-        tags: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }},${{ env.DOCKER_REPOSITORY }}:latest
-        cache-from: type=registry,ref=${{ env.DOCKER_REPOSITORY }}:latest
-        cache-to: type=inline
-  
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }},${{ env.DOCKER_REPOSITORY }}:latest
+          cache-from: type=registry,ref=${{ env.DOCKER_REPOSITORY }}:latest
+          cache-to: type=inline
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - uses: digitalocean/action-doctl@v2
-      with:
-        token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
 
-    - name: Download kubeconfig
-      run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 main-cluster
-    
-    - name: Setup Kustomize
-      run: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+      - name: Download kubeconfig
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 main-cluster
 
-    - name: Apply configuration
-      working-directory: k8s
-      run: |
-        kustomize edit set image $NOGARD_IMAGE
-        kustomize build | kubectl apply -f -
-      env:
-        NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
-        NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
-        NOGARD_COMPENDIUM_SHEET_ID: ${{ secrets.NOGARD_COMPENDIUM_SHEET_ID }}
-        NOGARD_COMPENDIUM_SHEET_CREDENTIALS: ${{ secrets.NOGARD_COMPENDIUM_SHEET_CREDENTIALS }}
+      - name: Setup Kustomize
+        run: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+
+      - name: Apply configuration
+        working-directory: k8s
+        run: |
+          kustomize edit set image $NOGARD_IMAGE
+          kustomize build | kubectl apply -f -
+        env:
+          NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
+          NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
+          NOGARD_COMPENDIUM_SHEET_ID: ${{ secrets.NOGARD_COMPENDIUM_SHEET_ID }}
+          NOGARD_COMPENDIUM_SHEET_CREDENTIALS: ${{ secrets.NOGARD_COMPENDIUM_SHEET_CREDENTIALS }}
