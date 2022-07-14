@@ -9,6 +9,7 @@ import (
 	"github.com/ssouthcity/nogard/pkg/compendium"
 	"github.com/ssouthcity/nogard/pkg/fandom"
 	"github.com/ssouthcity/nogard/pkg/interaction"
+	"github.com/ssouthcity/nogard/pkg/redis"
 )
 
 func main() {
