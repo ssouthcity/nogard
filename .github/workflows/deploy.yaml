@@ -8,8 +8,8 @@ on:
       - "Dockerfile"
       - "k8s/**"
       - "**.go"
-      - "cmd/nogard/**"
       - "!cmd/**"
+      - "cmd/nogard/**"
 
 env:
   DOCKER_REPOSITORY: ssouthcity/nogard
