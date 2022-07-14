@@ -73,15 +73,17 @@ func (e *DragonEncyclopedia) rowToRarity(row []interface{}) nogard.Rarity {
 
 func (e *DragonEncyclopedia) rowToAvailability(row []interface{}) nogard.Availability {
 	isLimited, _ := strconv.ParseBool(row[2].(string))
-	isLegacy, _ := strconv.ParseBool(row[7].(string))
 
-	if isLegacy {
-		if isLimited {
-			return nogard.Available
-		} else {
-			return nogard.Unavailable
+	if isLimited {
+		resp, _ := e.sheet.Spreadsheets.Values.Get(e.spreadsheetID, "Active Limiteds!A2:2").Do()
+		for _, r := range resp.Values {
+			if row[0].(string) == r[0].(string) {
+				return nogard.Available
+			}
 		}
+		return nogard.Unavailable
 	}
+
 	return nogard.Permanent
 }
 
