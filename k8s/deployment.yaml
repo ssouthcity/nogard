@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nogard
-          image: ssouthcity/nogard
+          image: ssouthcity/nogard-bot
           args:
             - "-redis=$(REDIS_SRV_SERVICE_HOST):$(REDIS_SRV_SERVICE_PORT)"
           env:
