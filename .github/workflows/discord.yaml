@@ -3,7 +3,7 @@ name: Discord Bot Build
 on:
   push:
     branches: ["main"]
-    paths: ["./discord/**"]
+    paths: ["discord/**"]
 
 env:
   DOCKER_REPOSITORY: ssouthcity/nogard-bot
