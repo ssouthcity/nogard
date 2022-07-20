@@ -1,4 +1,4 @@
-name: Upsert Kubernetes Resources
+name: Apply Kubernetes Resources
 
 on:
   push:

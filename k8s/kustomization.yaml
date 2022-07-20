@@ -3,7 +3,6 @@ kind: Kustomization
 resources:
   - deployment.yaml
   - namespace.yaml
-  - cronjob.yaml
   - redis/deployment.yaml
   - redis/volume.yaml
   - redis/service.yaml
