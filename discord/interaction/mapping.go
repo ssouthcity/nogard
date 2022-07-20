@@ -2,7 +2,7 @@ package interaction
 
 import (
 	"github.com/bwmarrin/discordgo"
-	"github.com/ssouthcity/nogard"
+	nogard "github.com/ssouthcity/nogard/lib"
 )
 
 var RarityColors = map[nogard.Rarity]int{

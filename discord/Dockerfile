@@ -1,10 +1,10 @@
-FROM golang:1.18-alpine AS builder
+FROM golang:1.18 AS builder
 
 WORKDIR /app
 
 COPY . .
 
-RUN go build -o nogard cmd/nogard/main.go
+RUN go build -o nogard .
 
 FROM alpine
 

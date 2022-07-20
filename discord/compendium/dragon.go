@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ssouthcity/nogard"
+	nogard "github.com/ssouthcity/nogard/lib"
 	"google.golang.org/api/option"
 	"google.golang.org/api/sheets/v4"
 )

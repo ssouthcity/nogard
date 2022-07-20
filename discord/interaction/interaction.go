@@ -4,7 +4,7 @@ import (
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
 	"github.com/ssouthcity/dgimux"
-	"github.com/ssouthcity/nogard"
+	nogard "github.com/ssouthcity/nogard/lib"
 )
 
 type InteractionRouter struct {

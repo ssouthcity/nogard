@@ -9,7 +9,7 @@ import (
 
 	"github.com/antchfx/htmlquery"
 	"github.com/antchfx/xpath"
-	"github.com/ssouthcity/nogard"
+	nogard "github.com/ssouthcity/nogard/lib"
 )
 
 type DescriptionPatcher struct {

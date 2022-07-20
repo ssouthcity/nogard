@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-redis/redis/v9"
 	"github.com/sirupsen/logrus"
-	"github.com/ssouthcity/nogard"
+	nogard "github.com/ssouthcity/nogard/lib"
 )
 
 type DragonCache struct {

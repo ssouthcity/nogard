@@ -5,11 +5,11 @@ import (
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/sirupsen/logrus"
-	"github.com/ssouthcity/nogard"
-	"github.com/ssouthcity/nogard/pkg/compendium"
-	"github.com/ssouthcity/nogard/pkg/fandom"
-	"github.com/ssouthcity/nogard/pkg/interaction"
-	"github.com/ssouthcity/nogard/pkg/redis"
+	"github.com/ssouthcity/nogard/discord/compendium"
+	"github.com/ssouthcity/nogard/discord/fandom"
+	"github.com/ssouthcity/nogard/discord/interaction"
+	"github.com/ssouthcity/nogard/discord/redis"
+	nogard "github.com/ssouthcity/nogard/lib"
 )
 
 func main() {

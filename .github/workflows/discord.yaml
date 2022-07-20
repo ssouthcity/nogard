@@ -1,18 +1,12 @@
-name: Deploy Application
+name: Discord Bot Build
 
 on:
   push:
     branches: ["main"]
-    paths:
-      - ".github/workflows/deploy.yaml"
-      - "Dockerfile"
-      - "k8s/**"
-      - "**.go"
-      - "!cmd/**"
-      - "cmd/nogard/**"
+    paths: ["./discord/**"]
 
 env:
-  DOCKER_REPOSITORY: ssouthcity/nogard
+  DOCKER_REPOSITORY: ssouthcity/nogard-bot
 
 jobs:
   test:
@@ -22,12 +16,14 @@ jobs:
 
       - uses: actions/setup-go@v3
         with:
-          go-version: ">=1.17.0"
+          go-version: ">=1.18.0"
 
       - name: Build application
-        run: go build cmd/nogard/*
+        working-directory: ./discord
+        run: go build
 
       - name: Run tests
+        working-directory: ./discord
         run: go test ./...
 
   build:
@@ -47,6 +43,7 @@ jobs:
 
       - uses: docker/build-push-action@v3
         with:
+          context: ./discord
           push: true
           tags: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }},${{ env.DOCKER_REPOSITORY }}:latest
           cache-from: type=registry,ref=${{ env.DOCKER_REPOSITORY }}:latest
@@ -56,8 +53,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v3
-
       - uses: digitalocean/action-doctl@v2
         with:
           token: ${{ secrets.DIGITALOCEAN_TOKEN }}
@@ -65,16 +60,5 @@ jobs:
       - name: Download kubeconfig
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 main-cluster
 
-      - name: Setup Kustomize
-        run: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
-
-      - name: Apply configuration
-        working-directory: k8s
-        run: |
-          kustomize edit set image $NOGARD_IMAGE
-          kustomize build | kubectl apply -f -
-        env:
-          NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
-          NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
-          NOGARD_COMPENDIUM_SHEET_ID: ${{ secrets.NOGARD_COMPENDIUM_SHEET_ID }}
-          NOGARD_COMPENDIUM_SHEET_CREDENTIALS: ${{ secrets.NOGARD_COMPENDIUM_SHEET_CREDENTIALS }}
+      - name: Update Image
+        run: kubectl --namespace=nogard set image deployment/nogard nogard=${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
