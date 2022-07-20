@@ -15,15 +15,15 @@ spec:
         app: nogard
     spec:
       containers:
-      - name: redis
-        image: redis
-        ports:
-        - containerPort: 6379
-          protocol: TCP
-        volumeMounts:
-        - name: redis-volume
-          mountPath: /data
+        - name: redis
+          image: redis
+          ports:
+            - containerPort: 6379
+              protocol: TCP
+          volumeMounts:
+            - name: redis-volume
+              mountPath: /data
       volumes:
-      - name: redis-volume
-        persistentVolumeClaim:
-          claimName: redis-pvc
+        - name: redis-volume
+          persistentVolumeClaim:
+            claimName: redis-pvc

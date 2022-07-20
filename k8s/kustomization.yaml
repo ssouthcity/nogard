@@ -1,21 +1,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-- deployment.yaml
-- namespace.yaml
-- cronjob.yaml
-- redis/deployment.yaml
-- redis/volume.yaml
-- redis/service.yaml
+  - deployment.yaml
+  - namespace.yaml
+  - cronjob.yaml
+  - redis/deployment.yaml
+  - redis/volume.yaml
+  - redis/service.yaml
 
 namespace: nogard
 
 secretGenerator:
-- envs:
-  - .env
-  name: nogard-secrets
-  type: Opaque
-
-images:
-- name: ssouthcity/nogard
-  newTag: latest
+  - envs:
+      - .env
+    name: nogard-secrets
+    type: Opaque

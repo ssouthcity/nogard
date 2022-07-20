@@ -9,16 +9,16 @@ spec:
       template:
         spec:
           containers:
-          - name: redis-preload
-            image: golang
-            command: ["/bin/sh", "-c"]
-            args:
-            - GOPROXY=direct go install github.com/ssouthcity/nogard/cmd/nogard-preload-cache@latest;
-              nogard-preload-cache
-            env:
-            - name: NOGARD_REDIS_ADDRESS
-              value: "$(REDIS_SRV_SERVICE_HOST):$(REDIS_SRV_SERVICE_PORT)"
-            envFrom:
-            - secretRef:
-                name: nogard-secrets
+            - name: redis-preload
+              image: golang
+              command: ["/bin/sh", "-c"]
+              args:
+                - GOPROXY=direct go install github.com/ssouthcity/nogard/cmd/nogard-preload-cache@latest;
+                  nogard-preload-cache
+              env:
+                - name: NOGARD_REDIS_ADDRESS
+                  value: "$(REDIS_SRV_SERVICE_HOST):$(REDIS_SRV_SERVICE_PORT)"
+              envFrom:
+                - secretRef:
+                    name: nogard-secrets
           restartPolicy: OnFailure
