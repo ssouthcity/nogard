@@ -8,7 +8,6 @@ import (
 	"github.com/ssouthcity/nogard/discord/compendium"
 	"github.com/ssouthcity/nogard/discord/fandom"
 	"github.com/ssouthcity/nogard/discord/interaction"
-	"github.com/ssouthcity/nogard/discord/redis"
 	nogard "github.com/ssouthcity/nogard/lib"
 )
 
@@ -18,7 +17,7 @@ func main() {
 	token := os.Getenv("NOGARD_TOKEN")
 	sheetID := os.Getenv("NOGARD_COMPENDIUM_SHEET_ID")
 	sheetCreds := os.Getenv("NOGARD_COMPENDIUM_SHEET_CREDENTIALS")
-	redisAddr := os.Getenv("NOGARD_REDIS_ADDRESS")
+	// redisAddr := os.Getenv("NOGARD_REDIS_ADDRESS")
 
 	s, err := discordgo.New("Bot " + token)
 	if err != nil {
@@ -34,7 +33,7 @@ func main() {
 
 		dragonSrv = fandom.NewDragonDescriptionPatcher(dragonSrv)
 
-		dragonSrv = redis.NewDragonCache(redisAddr, dragonSrv, logger)
+		// dragonSrv = redis.NewDragonCache(redisAddr, dragonSrv, logger)
 	}
 
 	r := &interaction.InteractionRouter{
