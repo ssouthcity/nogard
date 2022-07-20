@@ -1,0 +1,31 @@
+name: Upsert Kubernetes Resources
+
+on:
+  push:
+    branches: ["main"]
+    paths: ["./k8s/**"]
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_TOKEN }}
+
+      - name: Download kubeconfig
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 main-cluster
+
+      - name: Setup Kustomize
+        run: curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+
+      - name: Apply configuration
+        working-directory: ./k8s
+        run: kustomize build | kubectl apply -f -
+        env:
+          NOGARD_IMAGE: ${{ env.DOCKER_REPOSITORY }}:${{ github.sha }}
+          NOGARD_TOKEN: ${{ secrets.NOGARD_TOKEN }}
+          NOGARD_COMPENDIUM_SHEET_ID: ${{ secrets.NOGARD_COMPENDIUM_SHEET_ID }}
+          NOGARD_COMPENDIUM_SHEET_CREDENTIALS: ${{ secrets.NOGARD_COMPENDIUM_SHEET_CREDENTIALS }}
