@@ -3,7 +3,7 @@ name: Apply Kubernetes Resources
 on:
   push:
     branches: ["main"]
-    paths: ["./k8s/**"]
+    paths: ["k8s/**"]
 
 jobs:
   apply:
