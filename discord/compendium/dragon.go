@@ -101,7 +101,10 @@ func (e *DragonEncyclopedia) rowToIncubation(row []interface{}) time.Duration {
 }
 
 func (e *DragonEncyclopedia) rowToCash(row []interface{}) float64 {
-	earn, _ := strconv.ParseFloat(row[34].(string), 64)
+	earn, err := strconv.ParseFloat(row[34].(string), 64)
+	if err != nil {
+		return 0
+	}
 	return 60.0 / earn * 100
 }
 
