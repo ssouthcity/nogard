@@ -9,6 +9,7 @@ require (
 	github.com/go-redis/redis/v9 v9.0.0-beta.1
 	github.com/sirupsen/logrus v1.9.0
 	github.com/ssouthcity/dgimux v0.0.0-20220620195935-ed0fff327162
+	github.com/ssouthcity/nogard/lib v0.0.0-20220720175738-f99070f40a7e
 	google.golang.org/api v0.88.0
 )
 
@@ -22,7 +23,6 @@ require (
 	github.com/googleapis/enterprise-certificate-proxy v0.1.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.4.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
-	github.com/ssouthcity/nogard v0.0.0-20220714172035-88c05be732d5 // indirect
 	go.opencensus.io v0.23.0 // indirect
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d // indirect
 	golang.org/x/net v0.0.0-20220624214902-1bab6f366d9e // indirect
